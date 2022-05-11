@@ -19,8 +19,15 @@ from taming.data.helper_types import BoundingBox, Annotation
 from taming.data.annotated_objects_dataset import AnnotatedObjectsDataset
 from taming.models.cond_transformer import Net2NetTransformer
 
+from habana_frameworks.torch.utils.library_loader import load_habana_module
+load_habana_module()
+import habana_frameworks.torch.core as htcore
+
+
 seed_everything(42424242)
-device: Literal['cuda', 'cpu'] = 'cuda'
+#device: Literal['cuda', 'cpu'] = 'cuda'
+device = torch.device("hpu")
+
 first_stage_factor = 16
 trained_on_res = 256
 

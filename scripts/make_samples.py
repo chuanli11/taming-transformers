@@ -7,6 +7,9 @@ from main import instantiate_from_config, DataModuleFromConfig
 from torch.utils.data import DataLoader
 from torch.utils.data.dataloader import default_collate
 from tqdm import trange
+from habana_frameworks.torch.utils.library_loader import load_habana_module
+load_habana_module()
+import habana_frameworks.torch.core as htcore
 
 
 def save_image(x, path):
@@ -199,8 +202,11 @@ def load_model_from_config(config, sd, gpu=True, eval_mode=True):
         missing, unexpected = model.load_state_dict(sd, strict=False)
         print(f"Missing Keys in State Dict: {missing}")
         print(f"Unexpected Keys in State Dict: {unexpected}")
-    if gpu:
-        model.cuda()
+    #if gpu:
+    #    model.cuda()
+    device = torch.device("hpu")
+    model.to(device)
+
     if eval_mode:
         model.eval()
     return {"model": model}
